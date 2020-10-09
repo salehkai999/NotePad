@@ -55,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openEdit() {
-
+        Intent intent = new Intent(this,AddEditActivity.class);
+        startActivity(intent);
     }
 
     private void openInfo() {
