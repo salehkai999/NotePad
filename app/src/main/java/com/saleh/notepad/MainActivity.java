@@ -5,6 +5,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,4 +31,34 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_layout,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit_add:
+                Toast.makeText(this, "EDIT ADD", Toast.LENGTH_SHORT).show();
+                openEdit();
+                return true;
+            case R.id.info:
+                Toast.makeText(this, "INFO", Toast.LENGTH_LONG).show();
+                openInfo();
+                return true;
+            default: return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void openEdit() {
+
+    }
+
+    private void openInfo() {
+        
+    }
+
 }
