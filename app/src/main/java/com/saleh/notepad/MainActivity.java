@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveNotesData(){
-        if(newNotes.size() != 0)
+        if(noteList.size() != 0)
         {
             try {
                 FileOutputStream fileOutputStream = getApplicationContext().openFileOutput(getString(R.string.file_name), Context.MODE_PRIVATE);
