@@ -3,4 +3,5 @@
     <string name="notepad">Note Pad</string>
     <string name="_2020_saleh_qaseer">© 2020, Saleh Qaseer</string>
     <string name="version_1_0">Version 1.0</string>
+    <string name="file_name">NotesData</string>
 </resources>

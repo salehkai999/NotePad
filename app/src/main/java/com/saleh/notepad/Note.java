@@ -1,8 +1,9 @@
 package com.saleh.notepad;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Note {
+public class Note implements Serializable {
     private String title;
     private String details;
     private Date dateEdited;
