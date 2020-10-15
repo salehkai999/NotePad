@@ -4,6 +4,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -100,4 +102,35 @@ public class AddEditActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onBackPressed() {
+        if(titleText.getText().toString().trim().isEmpty()) {//|| currentNote != null) {
+            if (!detailsText.getText().toString().trim().isEmpty())
+                Toast.makeText(this, "Untitled Note can't be saved", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Your note isn't saved!!");
+            builder.setMessage("Save " + titleText.getText().toString() + " ?");
+            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    saveNote();
+                }
+            });
+            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }
+    }
+
+    private boolean isChanged() {
+        return true;
+    }
 }

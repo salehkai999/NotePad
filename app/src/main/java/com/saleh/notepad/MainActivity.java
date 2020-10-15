@@ -1,11 +1,13 @@
 package com.saleh.notepad;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.JsonWriter;
@@ -31,7 +33,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,View.OnLongClickListener{
 
     private final List<Note> noteList = new ArrayList<>();
     private final List<Note> newNotes = new ArrayList<>();
@@ -209,5 +211,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.putExtra("index",pos);
         //noteList.remove(pos);
         startActivityForResult(intent,1);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final int pos = recyclerView.getChildLayoutPosition(v);
+        Note note = noteList.get(pos);
+        builder.setTitle("Delete"+note.getTitle());
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                noteList.remove(pos);
+                noteAdapter.notifyDataSetChanged();
+            }
+        });
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                return;
+            }
+        });
+
+        AlertDialog alertDialog =builder.create();
+        alertDialog.show();
+        return true;
     }
 }
