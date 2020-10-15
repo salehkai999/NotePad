@@ -12,6 +12,7 @@ import android.util.JsonWriter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -25,22 +26,25 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private final List<Note> noteList = new ArrayList<>();
     private final List<Note> newNotes = new ArrayList<>();
     private RecyclerView recyclerView;
     private NoteAdapter noteAdapter;
     private static final String TAG = "MainActivity_SQ";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.recycler);
-        noteAdapter = new NoteAdapter(noteList,this);
+        noteAdapter = new NoteAdapter(noteList, this);
         recyclerView.setAdapter(noteAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         loadJSONDate();
@@ -65,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
     }*/
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_layout,menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_layout, menu);
         return true;
     }
 
@@ -81,17 +85,18 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "INFO", Toast.LENGTH_LONG).show();
                 openInfo();
                 return true;
-            default: return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
     private void openEdit() {
-        Intent intent = new Intent(this,AddEditActivity.class);
+        Intent intent = new Intent(this, AddEditActivity.class);
         startActivityForResult(intent, 1);
     }
 
     private void openInfo() {
-        Intent intent = new Intent(this,InfoActivity.class);
+        Intent intent = new Intent(this, InfoActivity.class);
         startActivity(intent);
     }
 
@@ -101,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             StringBuilder builder = new StringBuilder();
             String line;
-            while((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 builder.append(line);
-                Log.d(TAG, "loadJSONDate: "+line);
+                Log.d(TAG, "loadJSONDate: " + line);
             }
             JSONArray jsonArray = new JSONArray(builder.toString());
-            for(int i=0;i<jsonArray.length();i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 Note note = new Note();
                 note.setTitle(jsonObject.getString("title"));
@@ -114,25 +119,23 @@ public class MainActivity extends AppCompatActivity {
                 note.setDateEdited(new Date(jsonObject.getString("date")));
                 noteList.add(note);
             }
+            Collections.sort(noteList);
             noteAdapter.notifyDataSetChanged();
-        }
-        catch (
+        } catch (
                 FileNotFoundException e) {
             Toast.makeText(this, "NO FILE", Toast.LENGTH_SHORT).show();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void saveNotesData(){
-        if(noteList.size() != 0)
-        {
+    private void saveNotesData() {
+        if (noteList.size() != 0) {
             try {
                 FileOutputStream fileOutputStream = getApplicationContext().openFileOutput(getString(R.string.file_name), Context.MODE_PRIVATE);
-                JsonWriter jsonWriter = new JsonWriter(new OutputStreamWriter(fileOutputStream,StandardCharsets.UTF_8));
+                JsonWriter jsonWriter = new JsonWriter(new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8));
                 jsonWriter.beginArray();
-                for(Note note : noteList){
+                for (Note note : noteList) {
                     jsonWriter.setIndent("  ");
                     jsonWriter.beginObject();
                     jsonWriter.name("title").value(note.getTitle());
@@ -142,15 +145,13 @@ public class MainActivity extends AppCompatActivity {
                 }
                 jsonWriter.endArray();
                 jsonWriter.close();
-                Log.d(TAG, "saveNotesData: "+noteList.toString());
+                Log.d(TAG, "saveNotesData: " + noteList.toString());
                 //noteList.clear();
 
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else
+        } else
             Toast.makeText(this, "No New Notes", Toast.LENGTH_SHORT).show();
     }
 
@@ -158,15 +159,55 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: "+requestCode);
-        if(resultCode==RESULT_OK) {
+        Log.d(TAG, "onActivityResult: " + requestCode);
+        if (resultCode == RESULT_OK) {
             Note newNote = (Note) data.getSerializableExtra("newNote");
+            //int index = data.getIntExtra("index",-1);
             //Toast.makeText(this, getIntent().getStringExtra("Title"), Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "onActivityResult: "+ newNote.toString());
+            Log.d(TAG, "onActivityResult: " + newNote.toString());
+            if(data.hasExtra("oldNote")) {
+                Note oldNote = (Note) data.getSerializableExtra("oldNote");
+                noteList.remove(oldNote);
+                noteList.add(newNote);
+                Collections.sort(noteList);
+                noteAdapter.notifyDataSetChanged();
+            }
+            else
+            {
+                noteList.add(newNote);
+                Collections.sort(noteList);
+                noteAdapter.notifyDataSetChanged();
+            }
             //newNotes.add(newNote);
-            noteList.add(newNote);
-            noteAdapter.notifyDataSetChanged();
+            //Log.d(TAG, "onActivityResult: "+index);
+            /*
+            if(index != -1) {
+                noteList.add(newNote);
+                Collections.sort(noteList);
+                noteAdapter.notifyDataSetChanged();
+            }
+            else
+            {
+                Note oldNote = noteList.get(index);
+                noteList.remove(oldNote);
+                //Log.d(TAG, "onActivityResult: "+oldNote.toString());
+                noteList.add(newNote);
+                Collections.sort(noteList);
+                noteAdapter.notifyDataSetChanged();
+            } */
         }
+
     }
 
+    @Override
+    public void onClick(View v) {
+        int pos = recyclerView.getChildLayoutPosition(v);
+        Note note = noteList.get(pos);
+        Toast.makeText(this, note.toString(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this,AddEditActivity.class);
+        intent.putExtra(Note.class.getName(),note);
+        intent.putExtra("index",pos);
+        //noteList.remove(pos);
+        startActivityForResult(intent,1);
+    }
 }

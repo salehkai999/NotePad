@@ -19,6 +19,8 @@ public class AddEditActivity extends AppCompatActivity {
 
     EditText titleText;
     EditText detailsText;
+    Note currentNote = null;
+    private int index = -1;
     private static final String TAG = "AddEditActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,17 @@ public class AddEditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_edit);
         titleText = findViewById(R.id.noteTitle);
         detailsText = findViewById(R.id.detailsText);
+
+        Intent intent = getIntent();
+        if(intent.hasExtra((Note.class.getName())) && intent.hasExtra("index")){
+            currentNote = (Note) intent.getSerializableExtra(Note.class.getName());
+            index = intent.getIntExtra("index",index);
+            if(currentNote == null)
+                return;
+
+            titleText.setText(currentNote.getTitle());
+            detailsText.setText(currentNote.getDetails());
+        }
 
     }
 
@@ -48,19 +61,43 @@ public class AddEditActivity extends AppCompatActivity {
 
     private void saveNote() {
         Note note = new Note();
-        if(titleText.getText().toString().trim().isEmpty())
-            Toast.makeText(this, "Untitled Note", Toast.LENGTH_SHORT).show();
+        if(titleText.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "Untitled Note can't be saved", Toast.LENGTH_SHORT).show();
+            finish();
+        }
         else {
             Log.d(TAG, "saveNote: "+titleText.getText().toString());
             note.setTitle(titleText.getText().toString());
             note.setDetails(detailsText.getText().toString());
             note.setDateEdited(new Date());
-            Intent intent = new Intent();
+            if(currentNote != null) {
+                if(!currentNote.getDetails().equals(note.getDetails()) || !currentNote.getTitle().equals(note.getTitle())) {
+                    currentNote.setDateEdited(new Date());
+                    sendResults(note);
+                }
+                else
+                    sendResults(currentNote);
+            }
+
+            sendResults(note);
+            //Intent intent = new Intent();
             //intent.putExtra("TITLE",titleText.getText());
-            intent.putExtra("newNote",note);
-            setResult(Activity.RESULT_OK,intent);
-            finish();
+            //intent.putExtra("newNote",note);
+            //setResult(Activity.RESULT_OK,intent);
+            //finish();
         }
+    }
+
+    private void sendResults(Note newNote) {
+        Log.d(TAG, "sendResults: "+newNote.toString());
+        Intent intent = new Intent();
+        //intent.putExtra("TITLE",titleText.getText());
+        intent.putExtra("newNote",newNote);
+        if(currentNote != null)
+            intent.putExtra("oldNote",currentNote);
+        //intent.putExtra("index",index);
+        setResult(Activity.RESULT_OK,intent);
+        finish();
     }
 
 }
