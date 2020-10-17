@@ -22,6 +22,7 @@ public class AddEditActivity extends AppCompatActivity {
     EditText titleText;
     EditText detailsText;
     Note currentNote = null;
+    Note note = new Note();
     private int index = -1;
     private static final String TAG = "AddEditActivity";
     @Override
@@ -62,7 +63,7 @@ public class AddEditActivity extends AppCompatActivity {
     }
 
     private void saveNote() {
-        Note note = new Note();
+        //Note note = new Note();
         if(titleText.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, "Untitled Note can't be saved", Toast.LENGTH_SHORT).show();
             finish();
@@ -104,29 +105,41 @@ public class AddEditActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Your note isn't saved!!");
+        builder.setMessage("Save " + titleText.getText().toString() + " ?");
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                saveNote();
+            }
+        });
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+
         if(titleText.getText().toString().trim().isEmpty()) {//|| currentNote != null) {
             if (!detailsText.getText().toString().trim().isEmpty())
                 Toast.makeText(this, "Untitled Note can't be saved", Toast.LENGTH_SHORT).show();
             finish();
         }
         else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Your note isn't saved!!");
-            builder.setMessage("Save " + titleText.getText().toString() + " ?");
-            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+            if(currentNote != null) {
+                if(!currentNote.getDetails().equals(note.getDetails()) || !currentNote.getTitle().equals(note.getTitle())) {
+                    currentNote.setDateEdited(new Date());
                     saveNote();
+                    //alertDialog.show();
                 }
-            });
-            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                else
+                    sendResults(currentNote);
                     finish();
-                }
-            });
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
+            }
+            else {
+            alertDialog.show(); }
         }
     }
 

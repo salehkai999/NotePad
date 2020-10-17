@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setAdapter(noteAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         loadJSONDate();
+        this.setTitle("Notes ("+noteList.size()+")");
         /*for(int i=0;i<10;i++) {
             noteList.add(new Note(i+"","SSSSSAAAA",new Date()));
         }*/
@@ -158,6 +159,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    private void updateTitle() {
+        this.setTitle("Notes ("+noteList.size()+")");
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -180,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Collections.sort(noteList);
                 noteAdapter.notifyDataSetChanged();
             }
+           updateTitle();
             //newNotes.add(newNote);
             //Log.d(TAG, "onActivityResult: "+index);
             /*
@@ -223,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(DialogInterface dialog, int id) {
                 noteList.remove(pos);
                 noteAdapter.notifyDataSetChanged();
+                updateTitle();
             }
         });
         builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
