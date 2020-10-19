@@ -38,11 +38,12 @@ public class AddEditActivity extends AppCompatActivity {
         if(intent.hasExtra((Note.class.getName())) && intent.hasExtra("index")){
             currentNote = (Note) intent.getSerializableExtra(Note.class.getName());
             index = intent.getIntExtra("index",index);
-            if(currentNote == null)
-                return;
+            if(currentNote != null) {
+                titleText.setText(currentNote.getTitle());
+                detailsText.setText(currentNote.getDetails());
+            }
 
-            titleText.setText(currentNote.getTitle());
-            detailsText.setText(currentNote.getDetails());
+
         }
 
     }
@@ -107,6 +108,9 @@ public class AddEditActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        note.setTitle(titleText.getText().toString());
+        note.setDetails(detailsText.getText().toString());
+        note.setDateEdited(new Date());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Your note isn't saved!!");
         builder.setMessage("Save " + titleText.getText().toString() + " ?");
@@ -119,6 +123,8 @@ public class AddEditActivity extends AppCompatActivity {
         builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                if(currentNote != null)
+                    sendResults(currentNote);
                 finish();
             }
         });
@@ -131,14 +137,16 @@ public class AddEditActivity extends AppCompatActivity {
         }
         else {
             if(currentNote != null) {
-                if(!currentNote.getDetails().equals(note.getDetails()) || !currentNote.getTitle().equals(note.getTitle())) {
+                if(currentNote.getDetails().equals(note.getDetails()) && currentNote.getTitle().equals(note.getTitle())) {
                     //currentNote.setDateEdited(new Date());
                     saveNote();
                     //alertDialog.show();
                 }
-                else
-                    sendResults(currentNote);
-                    finish();
+                else {
+                    alertDialog.show();
+                    //sendResults(currentNote);
+                    //finish();
+                }
             }
             else {
             alertDialog.show(); }
