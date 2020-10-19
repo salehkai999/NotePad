@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final int pos = recyclerView.getChildLayoutPosition(v);
         Note note = noteList.get(pos);
-        builder.setTitle("Delete"+note.getTitle());
+        builder.setTitle("Delete "+note.getTitle());
         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 noteList.remove(pos);

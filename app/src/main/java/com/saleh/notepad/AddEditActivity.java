@@ -58,7 +58,7 @@ public class AddEditActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.save :
-                Toast.makeText(this, "Save", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Save", Toast.LENGTH_SHORT).show();
                 saveNote();
                 return true;
             default: return super.onOptionsItemSelected(item);
