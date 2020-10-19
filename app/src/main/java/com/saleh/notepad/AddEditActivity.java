@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,7 @@ public class AddEditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_edit);
         titleText = findViewById(R.id.noteTitle);
         detailsText = findViewById(R.id.detailsText);
+        detailsText.setMovementMethod(new ScrollingMovementMethod());
 
         Intent intent = getIntent();
         if(intent.hasExtra((Note.class.getName())) && intent.hasExtra("index")){
@@ -130,7 +132,7 @@ public class AddEditActivity extends AppCompatActivity {
         else {
             if(currentNote != null) {
                 if(!currentNote.getDetails().equals(note.getDetails()) || !currentNote.getTitle().equals(note.getTitle())) {
-                    currentNote.setDateEdited(new Date());
+                    //currentNote.setDateEdited(new Date());
                     saveNote();
                     //alertDialog.show();
                 }

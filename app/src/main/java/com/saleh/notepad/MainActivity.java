@@ -64,12 +64,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         saveNotesData();
     }
 
-    /*
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadJSONDate();
-    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,11 +75,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_add:
-                Toast.makeText(this, "EDIT ADD", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "EDIT ADD", Toast.LENGTH_SHORT).show();
                 openEdit();
                 return true;
             case R.id.info:
-                Toast.makeText(this, "INFO", Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, "INFO", Toast.LENGTH_LONG).show();
                 openInfo();
                 return true;
             default:
@@ -186,23 +180,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 noteAdapter.notifyDataSetChanged();
             }
            updateTitle();
-            //newNotes.add(newNote);
-            //Log.d(TAG, "onActivityResult: "+index);
-            /*
-            if(index != -1) {
-                noteList.add(newNote);
-                Collections.sort(noteList);
-                noteAdapter.notifyDataSetChanged();
-            }
-            else
-            {
-                Note oldNote = noteList.get(index);
-                noteList.remove(oldNote);
-                //Log.d(TAG, "onActivityResult: "+oldNote.toString());
-                noteList.add(newNote);
-                Collections.sort(noteList);
-                noteAdapter.notifyDataSetChanged();
-            } */
         }
 
     }
@@ -211,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int pos = recyclerView.getChildLayoutPosition(v);
         Note note = noteList.get(pos);
-        Toast.makeText(this, note.toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, note.toString(), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this,AddEditActivity.class);
         intent.putExtra(Note.class.getName(),note);
         intent.putExtra("index",pos);

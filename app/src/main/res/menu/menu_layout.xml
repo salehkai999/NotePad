@@ -4,13 +4,13 @@
 
     <item
         android:id="@+id/info"
-        android:icon="@android:drawable/ic_menu_info_details"
+        android:icon="@drawable/baseline_info_white_36"
         android:title="Info"
         android:visible="true"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/edit_add"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/baseline_post_add_white_36"
         android:title="Add/Edit"
         app:showAsAction="ifRoom" />
 </menu>
