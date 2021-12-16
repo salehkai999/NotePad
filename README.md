@@ -1,6 +1,7 @@
 # NotePad
 An Android App that allows users to add/edit or remove notes. 
 Notes are ordered by last edited date.
+Notes are saved in a JSON file on Device
 
 ## Screenshots
 
